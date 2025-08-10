@@ -15,6 +15,7 @@
 #pragma once
 
 #include <Eigen/Dense>
+#include <iomanip>
 #include <alias.hpp>
 #include <bip.hpp>
 #include <estimation_result.hpp>

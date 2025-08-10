@@ -14,6 +14,7 @@
 #pragma once
 
 #include <iostream>
+#include <iomanip>
 #include <array>
 
 namespace robarma
