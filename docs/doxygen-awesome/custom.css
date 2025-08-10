@@ -1,0 +1,19 @@
+/* Force Doxygen title and search bar to stack vertically */
+#titlearea table {
+  width: 100%;
+}
+#titlearea tr#projectrow {
+  display: flex;
+  flex-direction: column;
+}
+#titlearea td#projectalign {
+  width: 100%;
+}
+#titlearea td {
+  display: block;
+  width: 100%;
+}
+#MSearchBox {
+  margin-top: 0.5em;
+  margin-left: 0;
+}

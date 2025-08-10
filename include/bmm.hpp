@@ -1,0 +1,52 @@
+#pragma once
+
+#include <arma.hpp>
+#include <Eigen/Dense>
+#include <alias.hpp>
+#include <bip.hpp>
+#include <solver.hpp>
+
+namespace robarma::bmm
+{
+    struct cost
+    {
+    private:
+        arma_model model;
+        double sigma;
+
+    public:
+        cost(arma_model model, double sigma)
+            : model(model), sigma(sigma)
+        {
+        }
+
+        template <typename T>
+        bool operator()(T const *const *parameters, T *residuals) const
+        {
+            auto [phi, theta, mu] = model.get_params(parameters);
+
+            Vec<T> e = model.arma_residuals(phi, theta, mu) / T(sigma);
+
+            T est = robarma::bip::rho2(e).sum();
+            residuals[0] = est;
+            return true;
+        };
+    };
+
+    arma_fit bmm(const arma_model &model, const double &sigma, arma_fit &initial)
+    {
+        auto *cost_function = new ceres::DynamicAutoDiffCostFunction<cost, 4>(new cost(model, sigma));
+
+        // Run the solver!
+        ceres::Solver::Options options;
+
+        options.max_num_iterations = 100;
+        options.minimizer_type = ceres::LINE_SEARCH;
+
+        arma_fit fit = robarma::solver::solve(model, initial, estimation_method::bmm, cost_function, options);
+
+        return fit;
+    }
+
+}
+// end of file
