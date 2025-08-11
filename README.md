@@ -66,12 +66,24 @@ std::cout << fit << std::endl;
 
 ```
 
-This gives
+Giving
 
 ```bash
-ARMA fit
+ARMA estimation summary
+
+Initial values
 
 phi
-theta    -0.1814   0.4219
-mu        1.9941
+theta     0.2447  -0.3863
+mu        2.0036
+
+estimation method   MM
+convergence         TRUE
+final cost          0.4947
+
+Estimated parameters
+
+phi
+theta     0.2447  -0.3863
+mu        2.0036
 ```
