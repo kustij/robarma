@@ -74,16 +74,16 @@ ARMA estimation summary
 Initial values
 
 phi
-theta     0.2447  -0.3863
-mu        2.0036
+theta     0.1994  -0.3889
+mu        2.0038
 
 estimation method   MM
 convergence         TRUE
-final cost          0.4947
+final cost          0.4844
 
 Estimated parameters
 
 phi
-theta     0.2447  -0.3863
-mu        2.0036
+theta     0.2077  -0.3899
+mu        1.9982
 ```
