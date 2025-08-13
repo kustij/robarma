@@ -51,7 +51,6 @@ namespace robarma::estimators
 
         // With trust-region minimizer, every solution is equal to initial estimate of Hannan-Rissanen.
         ceres::Solver::Options options;
-        options.logging_type = ceres::SILENT;
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::ols, cost_function, options);
@@ -75,7 +74,6 @@ namespace robarma::estimators
 
         ceres::Solver::Options options;
         options.max_num_iterations = 100;
-        options.logging_type = ceres::SILENT;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::mle, cost_function, options);
 
@@ -97,9 +95,7 @@ namespace robarma::estimators
 
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<ftau::cost, 4>(new ftau::cost(model));
 
-        // Run the solver!
         ceres::Solver::Options options;
-
         options.max_num_iterations = 100;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::ftau, cost_function, options);
@@ -121,11 +117,9 @@ namespace robarma::estimators
 
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<s::cost, 4>(new s::cost(model));
 
-        // Run the solver!
-        ceres::Solver::Options options;
-
-        options.max_num_iterations = 100;
         // Unstable without line_search
+        ceres::Solver::Options options;
+        options.max_num_iterations = 100;
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::s, cost_function, options);
@@ -149,11 +143,8 @@ namespace robarma::estimators
 
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<mm::cost, 4>(new mm::cost(model, sigma));
 
-        // Run the solver!
         ceres::Solver::Options options;
-
         options.max_num_iterations = 100;
-        // options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::mm, cost_function, options);
 

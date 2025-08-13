@@ -36,11 +36,8 @@ namespace robarma::mm
     {
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<cost, 4>(new cost(model, sigma));
 
-        // Run the solver!
         ceres::Solver::Options options;
-
         options.max_num_iterations = 100;
-        options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::mm, cost_function, options);
 
