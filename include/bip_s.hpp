@@ -54,8 +54,6 @@ namespace robarma::estimators
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<bip_s_functor, 4>(new bip_s_functor(model));
 
         ceres::Solver::Options options;
-
-        options.max_num_iterations = 100;
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::bs, cost_function, options);

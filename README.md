@@ -65,25 +65,3 @@ arma_fit fit = robarma::estimators::mm(arma);
 std::cout << fit << std::endl;
 
 ```
-
-Giving
-
-```bash
-ARMA estimation summary
-
-Initial values
-
-phi
-theta     0.1994  -0.3889
-mu        2.0038
-
-estimation method   MM
-convergence         TRUE
-final cost          0.4844
-
-Estimated parameters
-
-phi
-theta     0.2077  -0.3899
-mu        1.9982
-```

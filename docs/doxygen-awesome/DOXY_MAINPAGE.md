@@ -63,15 +63,4 @@ robarma::arma arma(y, 0, 2);
 
 arma_fit fit = robarma::estimators::mm(arma);
 std::cout << fit << std::endl;
-
-```
-
-This gives
-
-```bash
-ARMA fit
-
-phi
-theta    -0.1814   0.4219
-mu        1.9941
 ```

@@ -58,7 +58,7 @@ namespace robarma
      * Contains:
      *  - method: which estimation method was used
      *  - convergence: whether the optimizer converged
-     *  - final_cost: objective function value
+     *  - final_cost: objective function value (as we return only one value, Ceres gives the correct value, not squared one)
      *  - report: (optional) optimizer report string
      *
      * Used in arma_fit to track both initial and final estimation results.

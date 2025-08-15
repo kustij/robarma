@@ -34,7 +34,7 @@ namespace robarma::solver
      * @return arma_fit containing the optimized parameters and results
      */
     template <typename T>
-    arma_fit solve(const arma_model &model, const arma_fit initial, estimation_method method, ceres::DynamicAutoDiffCostFunction<T> *cost_function, const ceres::Solver::Options options)
+    arma_fit solve(const arma_model &model, const arma_fit initial, estimation_method method, ceres::DynamicAutoDiffCostFunction<T> *cost_function, ceres::Solver::Options options)
     {
         arma_fit opt_params = initial;
 
