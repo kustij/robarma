@@ -73,7 +73,6 @@ namespace robarma::estimators
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<mle::cost, 4>(new mle::cost(model));
 
         ceres::Solver::Options options;
-        options.max_num_iterations = 100;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::mle, cost_function, options);
 
@@ -96,7 +95,6 @@ namespace robarma::estimators
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<ftau::cost, 4>(new ftau::cost(model));
 
         ceres::Solver::Options options;
-        options.max_num_iterations = 100;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::ftau, cost_function, options);
 
@@ -119,7 +117,6 @@ namespace robarma::estimators
 
         // Unstable without line_search
         ceres::Solver::Options options;
-        options.max_num_iterations = 100;
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::s, cost_function, options);
@@ -144,7 +141,6 @@ namespace robarma::estimators
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<mm::cost, 4>(new mm::cost(model, sigma));
 
         ceres::Solver::Options options;
-        options.max_num_iterations = 100;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::mm, cost_function, options);
 
