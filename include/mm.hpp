@@ -24,7 +24,7 @@ namespace robarma::mm
         bool operator()(T const *const *parameters, T *residuals) const
         {
             auto [phi, theta, mu] = model.get_params(parameters);
-            // std::cout << phi << theta << mu << std::endl;
+
             Vec<T> e = model.arma_residuals(phi, theta, mu) / T(sigma);
             T est = robarma::bip::rho2(e).sum() / T(model.n - model.p);
             residuals[0] = est;
