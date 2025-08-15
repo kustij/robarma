@@ -25,7 +25,7 @@ namespace robarma::bmm
         {
             auto [phi, theta, mu] = model.get_params(parameters);
 
-            Vec<T> e = model.arma_residuals(phi, theta, mu) / T(sigma);
+            Vec<T> e = model.bip_arma_residuals(phi, theta, mu, T(sigma)) / T(sigma);
 
             T est = robarma::bip::rho2(e).sum();
             residuals[0] = est;
