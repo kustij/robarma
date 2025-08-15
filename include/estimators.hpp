@@ -158,7 +158,6 @@ namespace robarma::estimators
     arma_fit bip_mm(const arma_model &model)
     {
         // Step 1.
-
         arma_fit s_mm = robarma::estimators::s(model);
         arma_fit s_bmm = robarma::estimators::bip_s(model);
 
@@ -166,7 +165,6 @@ namespace robarma::estimators
         double sigma = fmin(s_mm.result.final_cost, s_bmm.result.final_cost);
 
         // Step 3.
-
         arma_fit fit_mm = robarma::mm::mm(model, sigma, s_mm);
         arma_fit fit_bmm = robarma::bmm::bmm(model, sigma, s_bmm);
 
