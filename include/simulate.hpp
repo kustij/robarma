@@ -51,6 +51,7 @@ namespace robarma
      * @param theta MA parameters (optional, default: none)
      * @param mu location parameter
      * @param n sample size
+     * @param e innovations (optional, default: none, must be size n)
      * @param burn_in size of burn in period (default: 100)
      * @param seed random seed (default: 0, uses current time)
      * @return Eigen::VectorXd
@@ -60,6 +61,7 @@ namespace robarma
         const Eigen::VectorXd &theta = Eigen::VectorXd{},
         double mu = 0.0,
         int n = 100,
+        const Eigen::VectorXd &e = Eigen::VectorXd{},
         int burn_in = 100,
         int seed = 0)
     {
@@ -79,7 +81,22 @@ namespace robarma
 
         Eigen::Rand::Vmt19937_64 urng{static_cast<unsigned long long>(seed)};
 
-        Eigen::VectorXd e = Eigen::Rand::normal<Eigen::VectorXd>(nn, 1, urng);
+        Eigen::VectorXd ee = Eigen::VectorXd(nn);
+        if (e.size() == 0)
+        {
+            ee = Eigen::Rand::normal<Eigen::VectorXd>(nn, 1, urng);
+        }
+        else if (e.size() == n)
+        {
+            Eigen::VectorXd burn_errors = Eigen::Rand::normal<Eigen::VectorXd>(burn_in, 1, urng);
+            ee.head(burn_in) = burn_errors;
+            ee.segment(burn_in, n) = e;
+        }
+        else
+        {
+            throw std::invalid_argument("Provided error vector has incorrect size.");
+        }
+
         Eigen::VectorXd x = Eigen::VectorXd::Zero(nn);
 
         Eigen::VectorXd phi_tmp;
@@ -90,15 +107,15 @@ namespace robarma
             for (int i = r + 1; i < nn; i++)
             {
                 phi_tmp = x.segment(i - p, p).reverse();
-                x(i) = mu * (1.0 - phi.sum()) + e(i) + phi.dot(phi_tmp);
+                x(i) = mu * (1.0 - phi.sum()) + ee(i) + phi.dot(phi_tmp);
             }
         }
         else if (p == 0 && q > 0)
         {
             for (int i = r + 1; i < nn; i++)
             {
-                theta_tmp = e.segment(i - q, q).reverse();
-                x(i) = mu + e(i) + theta.dot(theta_tmp);
+                theta_tmp = ee.segment(i - q, q).reverse();
+                x(i) = mu + ee(i) + theta.dot(theta_tmp);
             }
         }
         else if (p > 0 && q > 0)
@@ -106,8 +123,8 @@ namespace robarma
             for (int i = r + 1; i < nn; i++)
             {
                 phi_tmp = x.segment(i - p, p).reverse();
-                theta_tmp = e.segment(i - q, q).reverse();
-                x(i) = mu * (1.0 - phi.sum()) + e(i) + phi.dot(phi_tmp) + theta.dot(theta_tmp);
+                theta_tmp = ee.segment(i - q, q).reverse();
+                x(i) = mu * (1.0 - phi.sum()) + ee(i) + phi.dot(phi_tmp) + theta.dot(theta_tmp);
             }
         }
         return x.tail(n);
