@@ -81,6 +81,8 @@ namespace robarma
 
         Eigen::Rand::Vmt19937_64 urng{static_cast<unsigned long long>(seed)};
 
+        // Check the length of innovations vector.
+        // If 0, vector is provided and we revert to case of standard normal innovations.
         Eigen::VectorXd ee = Eigen::VectorXd(nn);
         if (e.size() == 0)
         {
@@ -88,8 +90,8 @@ namespace robarma
         }
         else if (e.size() == n)
         {
-            Eigen::VectorXd burn_errors = Eigen::Rand::normal<Eigen::VectorXd>(burn_in, 1, urng);
-            ee.head(burn_in) = burn_errors;
+            Eigen::VectorXd burn_innovations = Eigen::Rand::normal<Eigen::VectorXd>(burn_in, 1, urng);
+            ee.head(burn_in) = burn_innovations;
             ee.segment(burn_in, n) = e;
         }
         else
