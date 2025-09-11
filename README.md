@@ -65,3 +65,25 @@ arma_fit fit = robarma::estimators::mm(arma);
 std::cout << fit << std::endl;
 
 ```
+
+## Advanced usage
+
+### Logging Suppression (Ceres/glog)
+
+RobARMA itself doesn't log anything. However, Ceres logs heavily using glog and directs this to console. By default, RobARMA suppresses all logging from Ceres Solver (and glog). This is done automatically when you use any estimator or solver function.
+
+If you want to see Ceres/glog logs, you can opt out by defining the macro `ROBARMA_ENABLE_CERES_LOGGING` in your build:
+
+**CMake:**
+
+```cmake
+target_compile_definitions(robarma INTERFACE ROBARMA_ENABLE_CERES_LOGGING)
+```
+
+**Manual build:**
+
+```
+-DROBARMA_ENABLE_CERES_LOGGING
+```
+
+If you use your own glog setup, initialize glog and set flags before calling RobARMA functions.
