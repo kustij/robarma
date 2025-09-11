@@ -3,6 +3,8 @@
 #include <arma.hpp>
 #include <estimation_result.hpp>
 
+#include <logging.hpp>
+
 namespace robarma::solver
 {
     /**
@@ -36,6 +38,7 @@ namespace robarma::solver
     template <typename T>
     arma_fit solve(const arma_model &model, const arma_fit initial, estimation_method method, ceres::DynamicAutoDiffCostFunction<T> *cost_function, ceres::Solver::Options options)
     {
+        robarma::disable_ceres_logging();
         arma_fit opt_params = initial;
 
         auto [phi, theta, mu] = get_pointers(opt_params);
