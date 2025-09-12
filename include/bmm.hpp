@@ -33,7 +33,7 @@ namespace robarma::bmm
         };
     };
 
-    arma_fit bmm(const arma_model &model, const double &sigma, arma_fit &initial)
+    inline arma_fit bmm(const arma_model &model, const double &sigma, arma_fit &initial)
     {
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<cost, 4>(new cost(model, sigma));
 

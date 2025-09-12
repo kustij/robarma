@@ -6,7 +6,7 @@
 namespace robarma::base
 {
     template <typename Derived>
-    typename Derived::Scalar median(Eigen::DenseBase<Derived> &d)
+    inline typename Derived::Scalar median(Eigen::DenseBase<Derived> &d)
     {
         auto r{d.reshaped()};
         std::sort(r.begin(), r.end());
@@ -14,7 +14,7 @@ namespace robarma::base
     }
 
     template <typename Derived>
-    typename Derived::Scalar median(const Eigen::DenseBase<Derived> &d)
+    inline typename Derived::Scalar median(const Eigen::DenseBase<Derived> &d)
     {
         typename Derived::PlainObject m{d.replicate(1, 1)};
         return median(m);
@@ -22,7 +22,7 @@ namespace robarma::base
 
     // Median Absolute deviation
     template <typename T>
-    T MAD(const Vec<T> &x)
+    inline T MAD(const Vec<T> &x)
     {
 
         T med = median(x);
@@ -32,14 +32,14 @@ namespace robarma::base
 
     // Normalized MAD
     template <typename T>
-    T MADN(const Vec<T> &x)
+    inline T MADN(const Vec<T> &x)
     {
         return MAD(x) / T(0.675);
     }
 
     // Huber psi-function for an Eigen vector
     template <typename T>
-    Vec<T> huber(const Vec<T> &x, T k = T(1.345))
+    inline Vec<T> huber(const Vec<T> &x, T k = T(1.345))
     {
         return x.unaryExpr([k](const T &xi)
                            {
@@ -50,7 +50,7 @@ namespace robarma::base
     }
 
     template <typename T>
-    T bisquare(const T x, T k = T(1.547645))
+    inline T bisquare(const T x, T k = T(1.547645))
     {
         // eff 95%, k = 4.685 for location
         // maximum breakdown of 50%, k = 1.547645 for scale
@@ -65,15 +65,15 @@ namespace robarma::base
     }
 
     template <typename T>
-    Vec<T> bisquare(const Vec<T> x, const T k)
+    inline Vec<T> bisquare(const Vec<T> x, const T k)
     {
         return x.unaryExpr([k](const T &xi)
                            { return bisquare(xi, k); });
     }
 
     template <typename T>
-    T scale(const Vec<T> x, const T b = T(0.5), std::function<Vec<T>(Vec<T>)> func = [](const Vec<T> &v)
-                                                { return bisquare(v, T(1.547645)); })
+    inline T scale(const Vec<T> x, const T b = T(0.5), std::function<Vec<T>(Vec<T>)> func = [](const Vec<T> &v)
+                                                       { return bisquare(v, T(1.547645)); })
     {
         T tol = T(1e-6);
         T err = T(1) + tol;

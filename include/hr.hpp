@@ -17,7 +17,7 @@ namespace robarma::initial
      * @param model
      * @return arma_fit
      */
-    arma_fit hannan_rissanen(arma_model model)
+    inline arma_fit hannan_rissanen(arma_model model)
     {
         // Step 1: Fit an AR(M)-model to data
         double mu = model.y.mean();

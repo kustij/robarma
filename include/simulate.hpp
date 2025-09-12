@@ -14,6 +14,7 @@ namespace robarma
 {
 
     bool stationary(const Eigen::VectorXd &ar)
+    inline bool stationary(const Eigen::VectorXd &ar)
     {
         Eigen::PolynomialSolver<double, Eigen::Dynamic> solver;
         Eigen::VectorXd coeff = Eigen::VectorXd(ar.size() + 1);
@@ -23,7 +24,7 @@ namespace robarma
         return (roots.array().abs() > 1.0).all();
     }
 
-    bool invertible(const Eigen::VectorXd &ma)
+    inline bool invertible(const Eigen::VectorXd &ma)
     {
         Eigen::PolynomialSolver<double, Eigen::Dynamic> solver;
         Eigen::VectorXd coeff = Eigen::VectorXd(ma.size() + 1);
