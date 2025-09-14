@@ -9,11 +9,35 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/Polynomials>
 #include <EigenRand/EigenRand>
+#include <random>
+#include <algorithm>
 
 namespace robarma
 {
 
-    bool stationary(const Eigen::VectorXd &ar)
+    // Generates a vector of length n, with epsilon fraction of outliers of size x, placed evenly
+    inline Eigen::VectorXd generate_innovations_with_outliers(int n, double epsilon, double x, int seed = 0)
+    {
+        if (seed == 0)
+            seed = static_cast<int>(std::time(nullptr));
+        Eigen::Rand::Vmt19937_64 urng{static_cast<unsigned long long>(seed)};
+        Eigen::VectorXd innovations = Eigen::Rand::normal<Eigen::VectorXd>(n, 1, urng);
+
+        int n_outliers = static_cast<int>(std::round(epsilon * n));
+        if (n_outliers == 0)
+            return innovations;
+
+        double spacing = static_cast<double>(n) / n_outliers;
+        for (int i = 0; i < n_outliers; ++i)
+        {
+            int idx = static_cast<int>(std::round(i * spacing));
+            if (idx >= n)
+                idx = n - 1;
+            innovations(idx) += x;
+        }
+        return innovations;
+    }
+
     inline bool stationary(const Eigen::VectorXd &ar)
     {
         Eigen::PolynomialSolver<double, Eigen::Dynamic> solver;
