@@ -12,8 +12,6 @@
 
 namespace robarma
 {
-
-    bool stationary(const Eigen::VectorXd &ar)
     inline bool stationary(const Eigen::VectorXd &ar)
     {
         Eigen::PolynomialSolver<double, Eigen::Dynamic> solver;
