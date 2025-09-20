@@ -46,7 +46,7 @@ namespace robarma::estimators
         };
     };
 
-    arma_fit bip_s(const arma_model &model)
+    inline arma_fit bip_s(const arma_model &model)
     {
         // Calculate the initial S-estimator for ARMA model
         arma_fit initial = robarma::initial::hannan_rissanen(model);

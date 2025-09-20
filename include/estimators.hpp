@@ -43,7 +43,7 @@ namespace robarma::estimators
      * @param model
      * @return arma_fit
      */
-    arma_fit ols(const arma_model &model)
+    inline arma_fit ols(const arma_model &model)
     {
         arma_fit initial = robarma::initial::hannan_rissanen(model);
 
@@ -66,7 +66,7 @@ namespace robarma::estimators
      * @param model
      * @return arma_fit
      */
-    arma_fit mle(const arma_model &model)
+    inline arma_fit mle(const arma_model &model)
     {
         arma_fit initial = robarma::initial::hannan_rissanen(model);
 
@@ -88,7 +88,7 @@ namespace robarma::estimators
      * @param model
      * @return arma_fit
      */
-    arma_fit ftau(const arma_model &model)
+    inline arma_fit ftau(const arma_model &model)
     {
         arma_fit initial = robarma::initial::hannan_rissanen(model);
 
@@ -109,7 +109,7 @@ namespace robarma::estimators
      * @param model
      * @return arma_fit
      */
-    arma_fit s(const arma_model &model)
+    inline arma_fit s(const arma_model &model)
     {
         arma_fit initial = robarma::initial::hannan_rissanen(model);
 
@@ -132,7 +132,7 @@ namespace robarma::estimators
      * @param model
      * @return arma_fit
      */
-    arma_fit mm(const arma_model &model)
+    inline arma_fit mm(const arma_model &model)
     {
         arma_fit initial = robarma::estimators::s(model);
 
@@ -155,7 +155,7 @@ namespace robarma::estimators
      * @param model
      * @return arma_fit
      */
-    arma_fit bip_mm(const arma_model &model)
+    inline arma_fit bip_mm(const arma_model &model)
     {
         // Step 1.
         arma_fit s_mm = robarma::estimators::s(model);

@@ -14,7 +14,7 @@ namespace robarma
 {
 
     template <typename T>
-    Mat<T> robust_autocov_matrix(const Vec<T> &y, const int &m, const int &n)
+    inline Mat<T> robust_autocov_matrix(const Vec<T> &y, const int &m, const int &n)
     {
         int N = y.size();
         T med = robarma::base::median(y);
@@ -44,7 +44,7 @@ namespace robarma
 
     // Sample autocovariance matrix of size m x n
     template <typename T>
-    Mat<T> autocov_matrix(const Vec<T> &y, const int &m, const int &n)
+    inline Mat<T> autocov_matrix(const Vec<T> &y, const int &m, const int &n)
     {
         int N = y.size();
         T avg = y.mean();
@@ -71,7 +71,7 @@ namespace robarma
     }
 
     template <typename T>
-    Vec<T> causal(Vec<T> phi, Vec<T> theta)
+    inline Vec<T> causal(Vec<T> phi, Vec<T> theta)
     {
         // Calculate coefficients for characteristic polynomial of causal representation
         // lambda(B) = theta(B) / phi(B)
