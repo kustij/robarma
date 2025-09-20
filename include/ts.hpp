@@ -6,8 +6,8 @@
 #pragma once
 
 #include <Eigen/Dense>
-#include <arma.hpp>
 #include <alias.hpp>
+#include <arma.hpp>
 #include <robust.hpp>
 
 namespace robarma
@@ -95,6 +95,6 @@ namespace robarma
         return lambda.tail(n - 1);
     }
 
-}
+} // namespace robarma
 
 // end of file

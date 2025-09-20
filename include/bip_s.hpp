@@ -1,11 +1,11 @@
 #pragma once
 
-#include <arma.hpp>
-#include <ceres/ceres.h>
 #include <Eigen/Dense>
-#include <hr.hpp>
 #include <alias.hpp>
+#include <arma.hpp>
 #include <bip.hpp>
+#include <ceres/ceres.h>
+#include <hr.hpp>
 #include <robust.hpp>
 #include <ts.hpp>
 
@@ -59,5 +59,5 @@ namespace robarma::estimators
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::bs, cost_function, options);
         return fit;
     }
-}
+} // namespace robarma::estimators
 // end of file

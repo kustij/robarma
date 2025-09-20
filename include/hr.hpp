@@ -1,7 +1,7 @@
 #pragma once
 
-#include <arma.hpp>
 #include <Eigen/Dense>
+#include <arma.hpp>
 #include <estimation_result.hpp>
 
 /**
@@ -64,4 +64,4 @@ namespace robarma::initial
 
         return arma_fit(model, arma_params(phi, theta, mu), result);
     }
-}
+} // namespace robarma::initial

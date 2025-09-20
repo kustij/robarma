@@ -1,8 +1,8 @@
 #pragma once
 
-#include <arma.hpp>
 #include <Eigen/Dense>
 #include <alias.hpp>
+#include <arma.hpp>
 #include <bip.hpp>
 #include <robust.hpp>
 
@@ -32,5 +32,5 @@ namespace robarma::s
             return true;
         };
     };
-}
+} // namespace robarma::s
 // end of file

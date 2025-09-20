@@ -7,8 +7,8 @@
 #pragma once
 
 #include <Eigen/Dense>
-#include <unsupported/Eigen/Polynomials>
 #include <EigenRand/EigenRand>
+#include <unsupported/Eigen/Polynomials>
 
 namespace robarma
 {
@@ -130,6 +130,6 @@ namespace robarma
         }
         return x.tail(n);
     }
-}
+} // namespace robarma
 
 // end of file

@@ -71,6 +71,6 @@ namespace robarma::solver
         arma_fit fit(model, params, result, initial.params, initial.result);
         return fit;
     }
-}
+} // namespace robarma::solver
 
 // end of file

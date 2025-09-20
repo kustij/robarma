@@ -1,7 +1,7 @@
 #pragma once
 
-#include <arma.hpp>
 #include <alias.hpp>
+#include <arma.hpp>
 #include <tau.hpp>
 
 namespace robarma::ftau
@@ -68,5 +68,5 @@ namespace robarma::ftau
             return true;
         }
     };
-}
+} // namespace robarma::ftau
 // end of file

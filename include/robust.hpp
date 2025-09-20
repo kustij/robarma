@@ -94,6 +94,6 @@ namespace robarma::base
         }
         return sigma_0;
     }
-}
+} // namespace robarma::base
 
 // end of file
