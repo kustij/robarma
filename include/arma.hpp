@@ -20,6 +20,7 @@
 #include <bip.hpp>
 #include <estimation_result.hpp>
 #include <robust.hpp>
+#include <optional>
 
 namespace robarma
 {
