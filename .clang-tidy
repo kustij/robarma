@@ -1,0 +1,4 @@
+Checks: '-*,modernize-*,performance-*,bugprone-*,readability-*,cppcoreguidelines-*, misc-*, clang-analyzer-*'
+WarningsAsErrors: ''
+HeaderFilterRegex: '^(include/|tests/)'
+FormatStyle: none
