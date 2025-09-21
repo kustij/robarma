@@ -2,6 +2,7 @@
 
 #include <alias.hpp>
 #include <arma.hpp>
+#include <state_space_cost.hpp>
 #include <tau.hpp>
 
 namespace robarma::ftau

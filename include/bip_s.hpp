@@ -7,6 +7,7 @@
 #include <ceres/ceres.h>
 #include <hr.hpp>
 #include <robust.hpp>
+#include <solver.hpp>
 #include <ts.hpp>
 
 namespace robarma::estimators
