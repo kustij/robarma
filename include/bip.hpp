@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Eigen/Dense>
-#include <ceres/ceres.h>
 #include <alias.hpp>
+#include <ceres/ceres.h>
 
 /**
  * @brief Rho functions used in MM-, BIP-MM and S-estimators as defined in \cite Muler
@@ -67,5 +67,5 @@ namespace robarma::bip
     {
         return x.unaryExpr(static_cast<T (*)(const T)>(&eta));
     }
-}
+} // namespace robarma::bip
 // end of file

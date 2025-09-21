@@ -13,9 +13,9 @@
  */
 #pragma once
 
-#include <iostream>
-#include <iomanip>
 #include <array>
+#include <iomanip>
+#include <iostream>
 
 namespace robarma
 {
@@ -116,6 +116,6 @@ namespace robarma
         };
     };
 
-}
+} // namespace robarma
 
 // end of file

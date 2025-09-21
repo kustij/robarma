@@ -1,8 +1,8 @@
 #pragma once
 
-#include <arma.hpp>
 #include <Eigen/Dense>
 #include <alias.hpp>
+#include <arma.hpp>
 #include <bip.hpp>
 #include <solver.hpp>
 
@@ -42,5 +42,5 @@ namespace robarma::mm
 
         return fit;
     }
-}
+} // namespace robarma::mm
 // end of file

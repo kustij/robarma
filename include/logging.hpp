@@ -17,4 +17,4 @@ namespace robarma
         }
 #endif
     }
-}
+} // namespace robarma

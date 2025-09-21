@@ -1,8 +1,8 @@
 #pragma once
 
-#include <arma.hpp>
 #include <Eigen/Dense>
 #include <alias.hpp>
+#include <arma.hpp>
 #include <solver.hpp>
 
 namespace robarma::ols
@@ -26,5 +26,5 @@ namespace robarma::ols
             return true;
         };
     };
-}
+} // namespace robarma::ols
 // end of file
