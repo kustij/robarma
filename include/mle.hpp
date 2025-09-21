@@ -1,7 +1,7 @@
 #pragma once
 
-#include <arma.hpp>
 #include <alias.hpp>
+#include <arma.hpp>
 #include <state_space_cost.hpp>
 
 namespace robarma::mle
@@ -70,5 +70,5 @@ namespace robarma::mle
         };
     };
 
-}
+} // namespace robarma::mle
 // end of file

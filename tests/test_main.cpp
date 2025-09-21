@@ -1,18 +1,18 @@
-#include <catch2/catch_test_macros.hpp>
-#include <iostream>
-#include <simulate.hpp>
 #include <Eigen/Dense>
 #include <arma.hpp>
-#include <estimators.hpp>
-#include <mle.hpp>
-#include <ftau.hpp>
-#include <s.hpp>
-#include <mm.hpp>
 #include <bip_s.hpp>
-#include <tau.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <ceres/ceres.h>
-#include <ts.hpp>
+#include <estimators.hpp>
+#include <ftau.hpp>
+#include <iostream>
+#include <mle.hpp>
+#include <mm.hpp>
 #include <robust.hpp>
+#include <s.hpp>
+#include <simulate.hpp>
+#include <tau.hpp>
+#include <ts.hpp>
 
 TEST_CASE("ARMA TEST", "[arma]")
 {

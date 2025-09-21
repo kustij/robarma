@@ -83,5 +83,5 @@ namespace robarma::tau
         return sn * sqrt(rho2((u / sn).eval()).mean());
     }
 
-}
+} // namespace robarma::tau
 // end of file

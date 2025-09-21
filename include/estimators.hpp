@@ -17,14 +17,14 @@
 #include <hr.hpp>
 #include <solver.hpp>
 
-#include <ols.hpp>
-#include <mle.hpp>
-#include <ftau.hpp>
-#include <s.hpp>
-#include <mm.hpp>
-#include <bmm.hpp>
 #include <bip_s.hpp>
+#include <bmm.hpp>
 #include <estimation_result.hpp>
+#include <ftau.hpp>
+#include <mle.hpp>
+#include <mm.hpp>
+#include <ols.hpp>
+#include <s.hpp>
 
 /**
  * @namespace robarma::estimators
@@ -173,6 +173,6 @@ namespace robarma::estimators
 
         return (m < mb) ? fit_mm : fit_bmm;
     }
-}
+} // namespace robarma::estimators
 
 // end of file
