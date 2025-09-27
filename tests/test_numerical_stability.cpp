@@ -1,9 +1,9 @@
-#include <catch2/catch_test_macros.hpp>
 #include <Eigen/Dense>
-#include <simulate.hpp>
 #include <arma.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <estimators.hpp>
 #include <iostream>
+#include <simulate.hpp>
 
 TEST_CASE("Numerical stability of ARMA(1,1) estimators", "[numerical-stability]")
 {
@@ -17,11 +17,9 @@ TEST_CASE("Numerical stability of ARMA(1,1) estimators", "[numerical-stability]"
     double mu = 0;
     int T = 500;
 
-    Eigen::VectorXd innovations = robarma::generate_innovations_with_outliers(T, 0.1, 5);
-    std::cout << innovations.mean() << std::endl;
-
     for (int i = 0; i < N; ++i)
     {
+        Eigen::VectorXd innovations = robarma::generate_innovations_with_outliers(T, 0.1, 5);
         Eigen::VectorXd y = robarma::simulate(phi, theta, mu, T, innovations); // new innovations each time
         robarma::arma_model model(y, 1, 1);
 
