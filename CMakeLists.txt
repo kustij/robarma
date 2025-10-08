@@ -33,14 +33,6 @@ target_link_libraries(robarma_tests PRIVATE robarma Catch2::Catch2WithMain)
 enable_testing()
 add_test(NAME robarma_tests COMMAND robarma_tests)
 
-# Custom 'tests' target for convenience
-add_custom_target(tests
-    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS robarma_tests
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMENT "Build and run all tests"
-)
-
 # Install rules (optional)
 install(DIRECTORY include/ DESTINATION include)
 install(TARGETS robarma EXPORT robarmaTargets)
