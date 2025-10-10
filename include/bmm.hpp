@@ -38,6 +38,7 @@ namespace robarma::bmm
         auto *cost_function = new ceres::DynamicAutoDiffCostFunction<cost, 4>(new cost(model, sigma));
 
         ceres::Solver::Options options;
+        options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::bmm, cost_function, options);
 

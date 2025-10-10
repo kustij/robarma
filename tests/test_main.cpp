@@ -217,6 +217,21 @@ TEST_CASE("ARMA MLE - 04", "[arma]")
     std::cout << fit << std::endl;
 }
 
+TEST_CASE("ARMA MLE - 05", "[arma]")
+{
+    Eigen::VectorXd phi = Eigen::VectorXd::Zero(1);
+    Eigen::VectorXd theta = Eigen::VectorXd::Zero(1);
+
+    phi << 0.8;
+    theta << -0.7;
+
+    Eigen::VectorXd y = robarma::simulate(phi, theta, 0, 10000);
+
+    robarma::arma_model arma(y, 1, 1);
+    robarma::arma_fit fit = robarma::estimators::mle(arma);
+    std::cout << fit << std::endl;
+}
+
 TEST_CASE("ARMA FTAU", "[arma]")
 {
     Eigen::VectorXd phi = Eigen::VectorXd::Zero(1);
@@ -228,6 +243,21 @@ TEST_CASE("ARMA FTAU", "[arma]")
     Eigen::VectorXd y = robarma::simulate(phi, theta, 2, 10000);
 
     robarma::arma_model arma(y, 1, 2);
+    robarma::arma_fit fit = robarma::estimators::ftau(arma);
+    std::cout << fit << std::endl;
+}
+
+TEST_CASE("ARMA FTAU - 05", "[arma]")
+{
+    Eigen::VectorXd phi = Eigen::VectorXd::Zero(1);
+    Eigen::VectorXd theta = Eigen::VectorXd::Zero(1);
+
+    phi << 0.8;
+    theta << -0.7;
+
+    Eigen::VectorXd y = robarma::simulate(phi, theta, 0, 10000);
+
+    robarma::arma_model arma(y, 1, 1);
     robarma::arma_fit fit = robarma::estimators::ftau(arma);
     std::cout << fit << std::endl;
 }

@@ -10,6 +10,10 @@
 #include <alias.hpp>
 #include <robust.hpp>
 
+/**
+ * @brief Robust psi and rho functions used in \cite Bianco
+ *
+ */
 namespace robarma::tau
 {
     template <typename T>
@@ -22,10 +26,7 @@ namespace robarma::tau
         {
             return T(3) * ceres::pow(div, 2) - T(3) * ceres::pow(div, 4) + ceres::pow(div, 6);
         }
-        else
-        {
-            return T(1);
-        }
+        return T(1);
     }
 
     template <typename T>
@@ -43,10 +44,7 @@ namespace robarma::tau
         {
             return T(0.14) * ceres::pow(x, 2) + T(0.012) * ceres::pow(x, 4) - T(0.0018) * ceres::pow(x, 6);
         }
-        else
-        {
-            return T(1);
-        }
+        return T(1);
     }
 
     template <typename T>
@@ -58,14 +56,23 @@ namespace robarma::tau
     template <typename T>
     inline T psi(T x)
     {
+        // Function psi is a bounded odd function
         T c = T(1.55);
-        return (ceres::abs(x) < c) ? x : T(0);
+        if (ceres::abs(x) <= c)
+        {
+            return x;
+        }
+        return (x > T(0)) ? c : -c;
     }
 
     template <typename T>
     inline T w(T x)
     {
-        return psi<T>(x) / (x + std::numeric_limits<T>::epsilon());
+        if (x == T(0))
+        {
+            return T(0);
+        }
+        return psi<T>(x) / x;
     }
 
     template <typename T>
@@ -77,11 +84,10 @@ namespace robarma::tau
     }
 
     template <typename T>
-    inline T tau(Vec<T> u)
+    inline T tau2(Vec<T> u)
     {
         T sn = s(u);
-        return sn * sqrt(rho2((u / sn).eval()).mean());
+        return ceres::pow(sn, 2) * rho2((u / sn).eval()).sum();
     }
-
 } // namespace robarma::tau
 // end of file

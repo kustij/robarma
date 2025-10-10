@@ -8,10 +8,40 @@
 
 #include <Eigen/Dense>
 #include <EigenRand/EigenRand>
+#include <algorithm>
+#include <random>
 #include <unsupported/Eigen/Polynomials>
 
 namespace robarma
 {
+
+    // Generates a vector of length n, with epsilon fraction of outliers of size x,
+    // placed evenly
+    inline Eigen::VectorXd generate_innovations_with_outliers(int n, double epsilon,
+                                                              double x,
+                                                              int seed = 0)
+    {
+        if (seed == 0)
+            seed = static_cast<int>(std::time(nullptr));
+        Eigen::Rand::Vmt19937_64 urng{static_cast<unsigned long long>(seed)};
+        Eigen::VectorXd innovations =
+            Eigen::Rand::normal<Eigen::VectorXd>(n, 1, urng);
+
+        int n_outliers = static_cast<int>(std::round(epsilon * n));
+        if (n_outliers == 0)
+            return innovations;
+
+        double spacing = static_cast<double>(n) / n_outliers;
+        for (int i = 0; i < n_outliers; ++i)
+        {
+            int idx = static_cast<int>(std::round(i * spacing));
+            if (idx >= n)
+                idx = n - 1;
+            innovations(idx) += x;
+        }
+        return innovations;
+    }
+
     inline bool stationary(const Eigen::VectorXd &ar)
     {
         Eigen::PolynomialSolver<double, Eigen::Dynamic> solver;
@@ -55,14 +85,11 @@ namespace robarma
      * @param seed random seed (default: 0, uses current time)
      * @return Eigen::VectorXd
      */
-    inline Eigen::VectorXd simulate(
-        const Eigen::VectorXd &phi = Eigen::VectorXd{},
-        const Eigen::VectorXd &theta = Eigen::VectorXd{},
-        double mu = 0.0,
-        int n = 100,
-        const Eigen::VectorXd &e = Eigen::VectorXd{},
-        int burn_in = 100,
-        int seed = 0)
+    inline Eigen::VectorXd
+    simulate(const Eigen::VectorXd &phi = Eigen::VectorXd{},
+             const Eigen::VectorXd &theta = Eigen::VectorXd{}, double mu = 0.0,
+             int n = 100, const Eigen::VectorXd &e = Eigen::VectorXd{},
+             int burn_in = 100, int seed = 0)
     {
         if (seed == 0)
             seed = static_cast<int>(std::time(nullptr));
@@ -73,15 +100,18 @@ namespace robarma
         int r = std::max(p, q);
 
         if (p > 0 && !stationary(phi))
-            throw std::invalid_argument("AR parameters must specify a stationary process.");
+            throw std::invalid_argument(
+                "AR parameters must specify a stationary process.");
 
         if (q > 0 && !invertible(theta))
-            throw std::invalid_argument("MA parameters must specify an invertible process.");
+            throw std::invalid_argument(
+                "MA parameters must specify an invertible process.");
 
         Eigen::Rand::Vmt19937_64 urng{static_cast<unsigned long long>(seed)};
 
         // Check the length of innovations vector.
-        // If 0, vector is provided and we revert to case of standard normal innovations.
+        // If 0, vector is provided and we revert to case of standard normal
+        // innovations.
         Eigen::VectorXd ee = Eigen::VectorXd(nn);
         if (e.size() == 0)
         {
@@ -89,7 +119,8 @@ namespace robarma
         }
         else if (e.size() == n)
         {
-            Eigen::VectorXd burn_innovations = Eigen::Rand::normal<Eigen::VectorXd>(burn_in, 1, urng);
+            Eigen::VectorXd burn_innovations =
+                Eigen::Rand::normal<Eigen::VectorXd>(burn_in, 1, urng);
             ee.head(burn_in) = burn_innovations;
             ee.segment(burn_in, n) = e;
         }
@@ -125,7 +156,8 @@ namespace robarma
             {
                 phi_tmp = x.segment(i - p, p).reverse();
                 theta_tmp = ee.segment(i - q, q).reverse();
-                x(i) = mu * (1.0 - phi.sum()) + ee(i) + phi.dot(phi_tmp) + theta.dot(theta_tmp);
+                x(i) = mu * (1.0 - phi.sum()) + ee(i) + phi.dot(phi_tmp) +
+                       theta.dot(theta_tmp);
             }
         }
         return x.tail(n);

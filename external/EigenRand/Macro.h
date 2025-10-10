@@ -1,12 +1,12 @@
 /**
  * @file Macro.h
  * @author bab2min (bab2min@gmail.com)
- * @brief 
+ * @brief
  * @version 0.5.1
  * @date 2024-09-08
- * 
+ *
  * @copyright Copyright (c) 2020-2021
- * 
+ *
  */
 
 #ifndef EIGENRAND_MACRO_H
@@ -16,15 +16,16 @@
 #define EIGENRAND_MAJOR_VERSION 5
 #define EIGENRAND_MINOR_VERSION 1
 
-#if EIGEN_VERSION_AT_LEAST(3,3,10)
+#if EIGEN_VERSION_AT_LEAST(3, 3, 10)
 #define EIGENRAND_EIGEN_34_MODE
-#elif EIGEN_VERSION_AT_LEAST(3,3,4)
+#elif EIGEN_VERSION_AT_LEAST(3, 3, 4)
 #define EIGENRAND_EIGEN_33_MODE
 #endif
 
-#if EIGEN_VERSION_AT_LEAST(3,3,4) && !EIGEN_VERSION_AT_LEAST(3,4,1)
+#if EIGEN_VERSION_AT_LEAST(3, 3, 4)
+/* Allow Eigen 3.3.4 and above, including 3.4.1+ */
 #else
-#error Eigen 3.3.4 ~ 3.4.0 is required.
+#error Eigen 3.3.4 or newer is required.
 #endif
 
 #endif
