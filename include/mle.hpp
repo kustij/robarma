@@ -18,8 +18,8 @@ namespace robarma::mle
         template <typename T>
         void predict(Vec<T> &a, Mat<T> &P, const Mat<T> F, const Vec<T> H, const Vec<T> c) const
         {
-            a = F * a.template cast<T>() + c;
-            P = F * P * F.transpose().template cast<T>() + H * H.transpose().template cast<T>();
+            a = F * a + c;
+            P = F * P * F.transpose() + H * H.transpose();
         }
 
         template <typename T>
@@ -27,15 +27,15 @@ namespace robarma::mle
         {
             a = a + P * z * v / f;
             T epsilon = std::numeric_limits<T>::epsilon();
-            P = P - (P * z * z.transpose() * P) / (f + epsilon);
+            P = P - (P * z * z.transpose() * P) / f;
         }
 
         template <typename T>
         T loss(Vec<T> w, Vec<T> f) const
         {
-            T sigma = w.array().square().mean();
-            T vdet = f.prod();
-            return (T)model.n * log(sigma) + log(vdet);
+            T S = w.array().square().sum();
+            T log_likelihood = (T)model.n * log(S) + f.array().log().sum();
+            return log_likelihood;
         }
 
         template <typename T>
@@ -48,7 +48,7 @@ namespace robarma::mle
 
             Mat<T> F = F0(phi);
             Vec<T> H = H0(theta);
-            Mat<T> P = P0(F, H);
+            Mat<T> P = autocov_matrix<T>(model.y.template cast<T>(), r, r);
 
             Vec<T> f = Vec<T>::Ones(model.n);
             Vec<T> v = Vec<T>::Zero(model.n);

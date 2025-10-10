@@ -17,21 +17,23 @@ namespace robarma::ftau
         template <typename T>
         void predict(Vec<T> &a, Mat<T> &P, const Mat<T> F, const Vec<T> H, const T sigma, const Vec<T> c) const
         {
-            a = F * a.template cast<T>() + c;
-            P = F * P * F.transpose().template cast<T>() + pow(sigma, 2) * H * H.transpose().template cast<T>();
+            a = (F * a) + c;
+            P = (F * P * F.transpose()) + (pow(sigma, 2) * H * H.transpose());
         }
 
         template <typename T>
-        void update(Vec<T> &a, Mat<T> &P, const T u, const T sigma, const Vec<T> mt) const
+        void update(Vec<T> &a, Mat<T> &P, const T u, const T s, const Vec<T> mt) const
         {
-            a = a + (mt / sigma) * tau::psi(u / sigma);
-            P = P - mt * mt.transpose() / pow(sigma, 2) * tau::w(u / sigma);
+            a = a + ((mt / s) * tau::psi(u / s));
+            P = P - (mt * mt.transpose() / pow(s, 2) * tau::w(u / s));
         }
 
         template <typename T>
         T loss(Vec<T> u, Vec<T> a) const
         {
-            return a.array().square().log().sum() + (T)model.n * ceres::pow(tau::tau<T>((u.array() / a.array()).eval()), T(2));
+            T S = tau::tau2<T>(u.array() / a.array());
+            T log_likelihood = (T)model.n * log(S) + a.array().square().log().sum();
+            return log_likelihood;
         }
 
         template <typename T>
@@ -48,7 +50,7 @@ namespace robarma::ftau
 
             Mat<T> F = F0(phi);
             Vec<T> H = H0(theta);
-            Mat<T> P = P0(F, H);
+            Mat<T> P = robust_autocov_matrix<T>(model.y.template cast<T>(), r, r);
 
             Vec<T> s = Vec<T>::Ones(model.n);
             Vec<T> u = Vec<T>::Zero(model.n);
@@ -63,7 +65,7 @@ namespace robarma::ftau
                 mt = P.col(0);
                 s(i) = ceres::sqrt(mt(0));
                 u(i) = T(model.y(i)) - T(z.transpose() * a);
-                update(a, P, u(i), sigma, mt);
+                update(a, P, u(i), s(i), mt);
             }
             residuals[0] = loss(u, (s / sigma).eval());
             return true;
