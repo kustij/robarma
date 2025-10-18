@@ -122,7 +122,7 @@ namespace robarma::estimators
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::s, cost_function, options);
-
+        fit.params.sigma = fit.result.final_cost;
         return fit;
     }
 
@@ -138,9 +138,7 @@ namespace robarma::estimators
     {
         arma_fit initial = robarma::estimators::s(model);
 
-        double sigma = initial.result.final_cost;
-
-        auto *cost_function = new ceres::DynamicAutoDiffCostFunction<mm::cost, 4>(new mm::cost(model, sigma));
+        auto *cost_function = new ceres::DynamicAutoDiffCostFunction<mm::cost, 4>(new mm::cost(model, initial.params.sigma));
 
         ceres::Solver::Options options;
         options.minimizer_type = ceres::LINE_SEARCH;

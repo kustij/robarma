@@ -26,6 +26,59 @@ namespace robarma
 {
 
     /**
+     * @brief Stores ARMA model parameters (phi, theta, mu).
+     *
+     * phi: AR coefficients (length p)
+     * theta: MA coefficients (length q)
+     * mu: mean parameter
+     *
+     * Can be constructed from Eigen vectors or raw pointers (for optimizer interop).
+     */
+
+    class arma_params
+    {
+    public:
+        Eigen::VectorXd phi;
+        Eigen::VectorXd theta;
+        double mu;
+        double sigma;
+
+        arma_params() = default;
+        arma_params(const Eigen::VectorXd &phi, const Eigen::VectorXd &theta, double mu)
+            : phi(phi), theta(theta), mu(mu) {}
+        arma_params(double *_phi, int p, double *_theta, int q, double *_mu)
+            : phi(Eigen::Map<Eigen::VectorXd>(_phi, p)),
+              theta(Eigen::Map<Eigen::VectorXd>(_theta, q)),
+              mu(*_mu) {}
+
+        friend std::ostream &operator<<(std::ostream &os, const arma_params &params);
+    };
+
+    inline std::ostream &operator<<(std::ostream &os, const arma_params &params)
+    {
+        auto format_number = [](double val)
+        {
+            std::ostringstream ss;
+            ss << std::fixed << std::setprecision(4) << std::setw(8) << std::right << val;
+            return ss.str();
+        };
+        constexpr int label_width = 7;
+        constexpr int value_width = 8;
+        os << std::left << std::setw(label_width) << "phi" << std::right;
+        for (int i = 0; i < params.phi.size(); ++i)
+            os << std::setw(value_width) << format_number(params.phi[i]);
+        os << "\n";
+        os << std::left << std::setw(label_width) << "theta" << std::right;
+        for (int i = 0; i < params.theta.size(); ++i)
+            os << std::setw(value_width) << format_number(params.theta[i]);
+        os << "\n";
+        os << std::left << std::setw(label_width) << "mu" << std::right << std::setw(value_width) << format_number(params.mu) << "\n";
+        os << std::left << std::setw(label_width) << "sigma" << std::right << std::setw(value_width) << format_number(params.sigma) << "\n";
+
+        return os;
+    }
+
+    /**
      * @brief Represents an ARMA model and its associated time series data.
      *
      * Holds the observed time series, model order (p, q), and basic statistics (mu, sigma).
@@ -86,6 +139,23 @@ namespace robarma
         }
 
         template <typename T>
+        Vec<T> arma_residuals(robarma::arma_params params) const
+        {
+            Vec<T> e = Vec<T>::Zero(n);
+
+            T ar;
+            T ma;
+
+            for (int i = r; i < n; i++)
+            {
+                ar = params.phi.dot(y.segment(i - p, p).reverse().template cast<T>());
+                ma = params.theta.dot(e.segment(i - q, q).reverse().template cast<T>());
+                e(i) = T(y(i)) - params.mu * (T(1) - params.phi.sum()) - ar - ma;
+            }
+            return e;
+        }
+
+        template <typename T>
         Vec<T> bip_arma_residuals(Vec<T> phi, Vec<T> theta, T mu, T sigma) const
         {
             Vec<T> e = Vec<T>::Zero(n);
@@ -111,31 +181,6 @@ namespace robarma
             }
             return e;
         }
-    };
-
-    /**
-     * @brief Stores ARMA model parameters (phi, theta, mu).
-     *
-     * phi: AR coefficients (length p)
-     * theta: MA coefficients (length q)
-     * mu: mean parameter
-     *
-     * Can be constructed from Eigen vectors or raw pointers (for optimizer interop).
-     */
-    class arma_params
-    {
-    public:
-        Eigen::VectorXd phi;
-        Eigen::VectorXd theta;
-        double mu;
-
-        arma_params() = default;
-        arma_params(const Eigen::VectorXd &phi, const Eigen::VectorXd &theta, double mu)
-            : phi(phi), theta(theta), mu(mu) {}
-        arma_params(double *_phi, int p, double *_theta, int q, double *_mu)
-            : phi(Eigen::Map<Eigen::VectorXd>(_phi, p)),
-              theta(Eigen::Map<Eigen::VectorXd>(_theta, q)),
-              mu(*_mu) {}
     };
 
     /**
@@ -167,45 +212,15 @@ namespace robarma
 
         friend std::ostream &operator<<(std::ostream &os, const arma_fit &params)
         {
-            auto format_number = [](double val)
-            {
-                std::ostringstream ss;
-                ss << std::fixed << std::setprecision(4) << std::setw(8) << std::right << val;
-                return ss.str();
-            };
-
             os << "ARMA estimation summary\n\n";
-
             if (params.initial_params)
             {
                 os << "Initial values\n\n"
-                   << std::left
-                   << std::setw(8) << "phi";
-                for (int i = 0; i < params.initial_params->phi.size(); ++i)
-                    os << format_number(params.initial_params->phi[i]) << " ";
-                os << "\n"
-                   << std::setw(8) << "theta";
-                for (int i = 0; i < params.initial_params->theta.size(); ++i)
-                    os << format_number(params.initial_params->theta[i]) << " ";
-                os << "\n"
-                   << std::setw(8) << "mu"
-                   << format_number(params.initial_params->mu) << "\n\n";
+                   << *params.initial_params << "\n";
             }
-
             os << params.result << "\n";
             os << "Estimated parameters\n\n"
-               << std::left
-               << std::setw(8) << "phi";
-            for (int i = 0; i < params.params.phi.size(); ++i)
-                os << format_number(params.params.phi[i]) << " ";
-            os << "\n"
-               << std::setw(8) << "theta";
-            for (int i = 0; i < params.params.theta.size(); ++i)
-                os << format_number(params.params.theta[i]) << " ";
-            os << "\n"
-               << std::setw(8) << "mu"
-               << format_number(params.params.mu) << "\n";
-
+               << params.params << "\n";
             return os;
         };
     };
