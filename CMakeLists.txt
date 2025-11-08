@@ -21,7 +21,6 @@ add_library(robarma INTERFACE)
 target_compile_features(robarma INTERFACE cxx_std_17)
 target_include_directories(robarma INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external>
     $<INSTALL_INTERFACE:include>
 )
 target_compile_options(robarma INTERFACE -march=native -O3 -fno-math-errno -fno-trapping-math)
