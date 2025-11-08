@@ -7,8 +7,8 @@
 #pragma once
 
 #include <Eigen/Dense>
-#include <EigenRand/EigenRand>
 #include <algorithm>
+#include <ctime>
 #include <random>
 #include <unsupported/Eigen/Polynomials>
 
@@ -17,15 +17,27 @@ namespace robarma
 
     // Generates a vector of length n, with epsilon fraction of outliers of size x,
     // placed evenly
+    // Simple helper to sample standard normal (or scaled) into an Eigen vector.
+    inline Eigen::VectorXd sample_normal(int n, double mean = 0.0, double stddev = 1.0,
+                                         int seed = 0)
+    {
+        if (seed == 0)
+            seed = static_cast<int>(std::time(nullptr));
+        std::mt19937_64 rng(static_cast<unsigned long long>(seed));
+        std::normal_distribution<double> dist(mean, stddev);
+        Eigen::VectorXd v(n);
+        for (int i = 0; i < n; ++i)
+            v(i) = dist(rng);
+        return v;
+    }
+
     inline Eigen::VectorXd generate_innovations_with_outliers(int n, double epsilon,
                                                               double x,
                                                               int seed = 0)
     {
         if (seed == 0)
             seed = static_cast<int>(std::time(nullptr));
-        Eigen::Rand::Vmt19937_64 urng{static_cast<unsigned long long>(seed)};
-        Eigen::VectorXd innovations =
-            Eigen::Rand::normal<Eigen::VectorXd>(n, 1, urng);
+        Eigen::VectorXd innovations = sample_normal(n, 0.0, 1.0, static_cast<unsigned long long>(seed));
 
         int n_outliers = static_cast<int>(std::round(epsilon * n));
         if (n_outliers == 0)
@@ -107,20 +119,17 @@ namespace robarma
             throw std::invalid_argument(
                 "MA parameters must specify an invertible process.");
 
-        Eigen::Rand::Vmt19937_64 urng{static_cast<unsigned long long>(seed)};
-
         // Check the length of innovations vector.
         // If 0, vector is provided and we revert to case of standard normal
         // innovations.
         Eigen::VectorXd ee = Eigen::VectorXd(nn);
         if (e.size() == 0)
         {
-            ee = Eigen::Rand::normal<Eigen::VectorXd>(nn, 1, urng);
+            ee = sample_normal(nn, 0.0, 1.0, static_cast<unsigned long long>(seed));
         }
         else if (e.size() == n)
         {
-            Eigen::VectorXd burn_innovations =
-                Eigen::Rand::normal<Eigen::VectorXd>(burn_in, 1, urng);
+            Eigen::VectorXd burn_innovations = sample_normal(burn_in, 0.0, 1.0, static_cast<unsigned long long>(seed + 1));
             ee.head(burn_in) = burn_innovations;
             ee.segment(burn_in, n) = e;
         }
