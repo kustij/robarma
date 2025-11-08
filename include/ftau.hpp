@@ -9,8 +9,13 @@ namespace robarma::ftau
 {
     struct cost : public robarma::state_space_cost
     {
-        cost(arma_model model)
-            : state_space_cost(model)
+    private:
+        arma_model model;
+        double sigma;
+
+    public:
+        cost(arma_model model, double sigma)
+            : robarma::state_space_cost(model), model(model), sigma(sigma)
         {
         }
 
@@ -18,7 +23,7 @@ namespace robarma::ftau
         void predict(Vec<T> &a, Mat<T> &P, const Mat<T> F, const Vec<T> H, const T sigma, const Vec<T> c) const
         {
             a = (F * a) + c;
-            P = (F * P * F.transpose()) + (pow(sigma, 2) * H * H.transpose());
+            P = (F * P * F.transpose()) + (pow(T(sigma), 2) * H * H.transpose());
         }
 
         template <typename T>
@@ -41,10 +46,6 @@ namespace robarma::ftau
         {
             auto [phi, theta, mu] = model.get_params(parameters);
 
-            // Fix the estimate of sigma as the centered time series
-            Vec<T> y_centered = model.y.template cast<T>().array() - T(base::median(model.y));
-            T sigma = robarma::tau::s<T>(y_centered);
-
             Vec<T> z = Vec<T>::Zero(r);
             z.head(1).setOnes();
 
@@ -61,13 +62,13 @@ namespace robarma::ftau
 
             for (int i = 1; i < model.n; i++)
             {
-                predict(a, P, F, H, sigma, c);
+                predict(a, P, F, H, T(sigma), c);
                 mt = P.col(0);
                 s(i) = ceres::sqrt(mt(0));
                 u(i) = T(model.y(i)) - T(z.transpose() * a);
                 update(a, P, u(i), s(i), mt);
             }
-            residuals[0] = loss(u, (s / sigma).eval());
+            residuals[0] = loss(u, (s / T(sigma)).eval());
             return true;
         }
     };
