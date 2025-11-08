@@ -87,7 +87,8 @@ namespace robarma::tau
     inline T tau2(Vec<T> u)
     {
         T sn = s(u);
-        return ceres::pow(sn, 2) * rho2((u / sn).eval()).sum();
+        return ceres::pow(sn, 2) * rho2((u / sn).eval()).mean();
+        // return sn * rho2((u / ceres::sqrt(sn)).eval()).mean();
     }
 } // namespace robarma::tau
 // end of file
