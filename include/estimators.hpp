@@ -25,6 +25,7 @@
 #include <mm.hpp>
 #include <ols.hpp>
 #include <s.hpp>
+#include <sigma.hpp>
 
 /**
  * @namespace robarma::estimators
@@ -54,7 +55,7 @@ namespace robarma::estimators
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::ols, cost_function, options);
-
+        fit.params.sigma = sigma_ols(fit);
         return fit;
     }
 
@@ -76,7 +77,7 @@ namespace robarma::estimators
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::mle, cost_function, options);
-
+        fit.params.sigma = sigma_mle(fit);
         return fit;
     }
 
@@ -93,13 +94,15 @@ namespace robarma::estimators
     {
         arma_fit initial = robarma::initial::hannan_rissanen(model);
 
-        auto *cost_function = new ceres::DynamicAutoDiffCostFunction<ftau::cost, 4>(new ftau::cost(model));
+        Eigen::VectorXd y_centered = model.y.array() - base::median(model.y);
+        double sigma = robarma::tau::s(y_centered);
+        auto *cost_function = new ceres::DynamicAutoDiffCostFunction<ftau::cost, 4>(new ftau::cost(model, sigma));
 
         ceres::Solver::Options options;
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::ftau, cost_function, options);
-
+        fit.params.sigma = sigma;
         return fit;
     }
 
@@ -144,7 +147,7 @@ namespace robarma::estimators
         options.minimizer_type = ceres::LINE_SEARCH;
 
         arma_fit fit = robarma::solver::solve(model, initial, estimation_method::mm, cost_function, options);
-
+        fit.params.sigma = initial.params.sigma;
         return fit;
     }
 
