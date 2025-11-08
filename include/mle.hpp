@@ -9,18 +9,16 @@ namespace robarma::mle
 
     struct cost : public robarma::state_space_cost
     {
+
     public:
-        cost(arma_model model)
-            : state_space_cost(model)
-        {
-        }
+        cost(arma_model model) : state_space_cost(model) {}
 
         template <typename T>
         void predict(Vec<T> &a, Mat<T> &P, const Mat<T> F, const Vec<T> H, const Vec<T> c) const
         {
             a = F * a + c;
             P = F * P * F.transpose() + H * H.transpose();
-        }
+        } // namespace robarma::mle
 
         template <typename T>
         void update(Vec<T> &a, Mat<T> &P, const T v, const T f, const Vec<T> &z) const
@@ -39,7 +37,7 @@ namespace robarma::mle
         }
 
         template <typename T>
-        bool operator()(T const *const *parameters, T *residuals) const
+        std::tuple<Vec<T>, Vec<T>, Vec<T>> filter(T const *const *parameters) const
         {
             auto [phi, theta, mu] = model.get_params(parameters);
 
@@ -65,9 +63,16 @@ namespace robarma::mle
                 w(i) = v(i) / ceres::sqrt(f(i));
                 update(a, P, v(i), f(i), z);
             }
+            return {f, v, w};
+        }
+
+        template <typename T>
+        bool operator()(T const *const *parameters, T *residuals) const
+        {
+            auto [f, v, w] = filter(parameters);
             residuals[0] = loss(w, f);
             return true;
-        };
+        }
     };
 
 } // namespace robarma::mle
