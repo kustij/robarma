@@ -1,6 +1,6 @@
 # RobARMA - Robust estimators for ARMA models
 
-RobARMA is a small C++ library of robust and classic estimators for ARMA(p, q) processes. To achieve fast estimation of ARMA models, RobARMA builds on top of Eigen and Ceres.
+RobARMA is a small, header-only C++ library of robust and classic estimators for ARMA(p, q) processes. To achieve fast estimation of ARMA models, RobARMA builds on top of Eigen and Ceres.
 
 ## Features
 
@@ -66,11 +66,7 @@ std::cout << fit << std::endl;
 
 ```
 
-## Build
-
-## Building RobARMA
-
-RobARMA uses CMake for building and vcpkg for dependency management. You can also build without vcpkg if you manually install dependencies (Eigen3, Ceres).
+## Building
 
 ### Recommended: Build with vcpkg
 
@@ -83,7 +79,7 @@ Replace `/path/to/vcpkg` with your vcpkg installation path.
 
 ### Manual build (without vcpkg)
 
-1. Install Eigen3, Ceres, and Catch2 using your system package manager or from source.
+1. Install Eigen3 and Ceres.
 
 2. Configure and build:
    ```bash
@@ -97,7 +93,7 @@ Replace `/path/to/vcpkg` with your vcpkg installation path.
   ```bash
   cmake -B build -S . -DROBARMA_BUILD_TESTS=ON
   ```
-- The library is header-only. You can use the headers directly if you manually set include paths and dependencies.
+- The library is header-only. You can also use the headers directly (copy the include folder or add this project as a submodule).
 
 ### Logging Suppression (Ceres/glog)
 
