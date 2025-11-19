@@ -66,7 +66,38 @@ std::cout << fit << std::endl;
 
 ```
 
-## Advanced usage
+## Build
+
+## Building RobARMA
+
+RobARMA uses CMake for building and vcpkg for dependency management. You can also build without vcpkg if you manually install dependencies (Eigen3, Ceres).
+
+### Recommended: Build with vcpkg
+
+```bash
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake
+cmake --build build
+```
+
+Replace `/path/to/vcpkg` with your vcpkg installation path.
+
+### Manual build (without vcpkg)
+
+1. Install Eigen3, Ceres, and Catch2 using your system package manager or from source.
+
+2. Configure and build:
+   ```bash
+   cmake -B build -S .
+   cmake --build build
+   ```
+
+### Notes
+
+- By default, tests are not built. To enable tests (requires Catch2):
+  ```bash
+  cmake -B build -S . -DROBARMA_BUILD_TESTS=ON
+  ```
+- The library is header-only. You can use the headers directly if you manually set include paths and dependencies.
 
 ### Logging Suppression (Ceres/glog)
 

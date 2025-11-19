@@ -37,7 +37,7 @@ target_link_libraries(robarma INTERFACE Eigen3::Eigen Ceres::ceres)
 
 
 # Option to build tests
-option(ROBARMA_BUILD_TESTS "Build robarma tests" ON)
+option(ROBARMA_BUILD_TESTS "Build robarma tests" OFF)
 if(ROBARMA_BUILD_TESTS)
     add_executable(robarma_tests tests/test_main.cpp tests/test_numerical_stability.cpp)
     target_link_libraries(robarma_tests PRIVATE robarma Catch2::Catch2WithMain)
