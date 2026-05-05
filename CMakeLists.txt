@@ -4,7 +4,6 @@ project(robarma VERSION 1.0 LANGUAGES CXX)
 # Dependencies (cross-platform, vcpkg-friendly)
 find_package(Eigen3 CONFIG REQUIRED)
 find_package(Ceres CONFIG REQUIRED)
-find_package(Catch2 3 CONFIG REQUIRED)
 
 # Header-only library target
 if(APPLE)
@@ -39,6 +38,7 @@ target_link_libraries(robarma INTERFACE Eigen3::Eigen Ceres::ceres)
 # Option to build tests
 option(ROBARMA_BUILD_TESTS "Build robarma tests" OFF)
 if(ROBARMA_BUILD_TESTS)
+    find_package(Catch2 3 CONFIG REQUIRED)
     add_executable(robarma_tests tests/test_main.cpp tests/test_numerical_stability.cpp)
     target_link_libraries(robarma_tests PRIVATE robarma Catch2::Catch2WithMain)
     enable_testing()
